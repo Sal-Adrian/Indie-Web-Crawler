@@ -7,8 +7,9 @@ function printReport(pages) {
     for (const sortedPage of sortedPages) {
         const url = sortedPage[0];
         const hits = sortedPage[1];
-
-        console.log(`Found ${hits} links on page: ${url}`);
+        if (hits > 0) {
+            console.log(`Found ${hits} links on page: ${url}`);
+        }
     }
 
     console.log("=============================");
