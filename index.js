@@ -1,5 +1,4 @@
 const {crawlPage} = require('./crawl');
-const {hasVisitedNew} = require('./crawl');
 const {printReport} = require('./report');
 
 async function main() {
@@ -34,7 +33,6 @@ async function crawl(baseUrl, visited, depth) {
     let newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ]
     let newUrlObj = new URL(newUrl);
         
-    // hasVisitedNew(visited, newUrl)
     for (let i = 0; visited.indexOf(newUrlObj.hostname) > -1; i++) {
         if (i == 50) {
             return baseUrl;

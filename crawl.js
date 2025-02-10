@@ -51,11 +51,11 @@ async function crawlPageAbsolute(currentUrl, pages) {
     const normalizedCurrentUrl = normalizeURL(currentUrl);
     if (!normalizedCurrentUrl) {
         pages[normalizedCurrentUrl] = -1;
-        return;//pages;
+        return;
     }
     if (pages[normalizedCurrentUrl] > 0) {
         pages[normalizedCurrentUrl]++;
-        return;// pages;
+        return;
     }
 
     pages[normalizedCurrentUrl] = 1;
@@ -67,19 +67,17 @@ async function crawlPageAbsolute(currentUrl, pages) {
         
         if (resp.status > 399) {
             console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
-            return;// pages;
+            return;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
             console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
-            return;// pages;
+            return;
         }
     } catch(err) {
         console.log(`Error fetching from: `, currentUrl, err.message);
     }
-
-    return;// pages;
 }
 
 function getURLsFromHTML(htmlBody, baseURL) {
@@ -122,18 +120,8 @@ function normalizeURL(urlString) {
     return hostPath;
 }
 
-function hasVisitedNew (visited, newUrl) {
-    try {
-        const newUrlObj = new URL(newUrl);
-        return (visited.indexOf(newUrlObj.hostname) > -1);
-    } catch (err) {
-        return (visited.indexOf(newUrl) > -1);
-    }
-}
-
 module.exports = {
     normalizeURL,
     getURLsFromHTML,
     crawlPage,
-    hasVisitedNew
 }
