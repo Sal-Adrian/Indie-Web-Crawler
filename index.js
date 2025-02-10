@@ -12,7 +12,7 @@ async function main() {
         process.exit(1);
     }
     // Default depth level set to 1
-    let depth = process.argv.length > 3 ? process.argv[3]-1 : 1;
+    let depth = process.argv.length > 3 ? process.argv[3] : 1;
     let baseUrl = process.argv[2];
 
     let thePage = await crawl(baseUrl, [], depth);
@@ -31,17 +31,21 @@ async function crawl(baseUrl, visited, depth) {
     let keys = Object.keys(pages);
 
     console.log("==================================");
-    let newUrl = keys[ Math.floor(Math.random() * keys.length) ]
-    
-    for (let i = 0; hasVisitedNew(visited, newUrl); i++) {
+    let newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ]
+    let newUrlObj = new URL(newUrl);
+        
+    // hasVisitedNew(visited, newUrl)
+    for (let i = 0; visited.indexOf(newUrlObj.hostname) > -1; i++) {
         if (i == 50) {
             return baseUrl;
         }
-        newUrl = keys[ Math.floor(Math.random() * keys.length) ]
+        newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ];
+        newUrlObj = new URL(newUrl);
     }
     
     printReport(pages);
 
+    console.log(newUrl)
     thePage = await crawl(newUrl, visited, --depth);
     return thePage;
 }

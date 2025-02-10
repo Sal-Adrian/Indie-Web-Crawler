@@ -33,14 +33,12 @@ async function crawlPage(currentUrl, pages, visited) {
 
         const nextUrls = getURLsFromHTML(htmlBody, currentUrl);
 
-        // let nextUrlObj;
         for (const nextUrl of nextUrls) {
             let nextUrlObj = new URL(nextUrl);
             if (currUrlObj.hostname !== nextUrlObj.hostname &&
               visited.indexOf(nextUrlObj.hostname) < 0) {
                 crawlPageAbsolute(nextUrl, pages);
             }
-            // pages = await crawlPage(baseUrl, nextUrl, pages);
         }
     } catch(err) {
         console.log(`Error fetching from: `, currentUrl, err.message);
@@ -126,8 +124,8 @@ function normalizeURL(urlString) {
 
 function hasVisitedNew (visited, newUrl) {
     try {
-    const newUrlObj = new URL(newUrl);
-    return (visited.indexOf(newUrlObj.hostname) > -1);
+        const newUrlObj = new URL(newUrl);
+        return (visited.indexOf(newUrlObj.hostname) > -1);
     } catch (err) {
         return (visited.indexOf(newUrl) > -1);
     }
