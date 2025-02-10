@@ -1,62 +1,63 @@
 const {JSDOM} = require('jsdom');
 
-async function crawlPage(baseUrl, currentUrl, pages) {
-    const baseUrlObj = new URL(baseUrl);
-    const currentUrlObj = new URL(currentUrl);
-
-    if (baseUrlObj.hostname !== currentUrlObj.hostname) {
-        crawlPageAbsolute(currentUrl, pages);
-        return pages;
+async function crawlPage(currentUrl, pages, visited) {
+    const currUrlObj = new URL(currentUrl);
+    if (visited.indexOf(currUrlObj.hostname) < 0) {
+        visited.push(currUrlObj.hostname);
     }
-    
+
     const normalizedCurrentUrl = normalizeURL(currentUrl);
-    // console.log("****************" + normalizedCurrentUrl);
     if (pages[normalizedCurrentUrl] > 0 || pages[normalizedCurrentUrl] < 0) {
-        // pages[normalizedCurrentUrl]++;
-        return pages;
+        return visited;
     }
 
     pages[normalizedCurrentUrl] = -1;
 
-    console.log(`Actively crawlinig: ${currentUrl}`);
+    console.log(`Actively crawling: ${currentUrl}`);
 
     try {
         const resp = await fetch(currentUrl);
         
         if (resp.status > 399) {
             console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
-            return pages;
+            return visited;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
             console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
-            return pages;
+            return visited;
         }
 
         const htmlBody = await resp.text();
 
-        const nextUrls = getURLsFromHTML(htmlBody, baseUrl);
+        const nextUrls = getURLsFromHTML(htmlBody, currentUrl);
 
+        // let nextUrlObj;
         for (const nextUrl of nextUrls) {
-            pages = await crawlPage(baseUrl, nextUrl, pages);
+            let nextUrlObj = new URL(nextUrl);
+            if (currUrlObj.hostname !== nextUrlObj.hostname &&
+              visited.indexOf(nextUrlObj.hostname) < 0) {
+                crawlPageAbsolute(nextUrl, pages);
+            }
+            // pages = await crawlPage(baseUrl, nextUrl, pages);
         }
     } catch(err) {
         console.log(`Error fetching from: `, currentUrl, err.message);
     }
 
-    return pages;
+    return visited;
 }
 
 async function crawlPageAbsolute(currentUrl, pages) {
     const normalizedCurrentUrl = normalizeURL(currentUrl);
     if (!normalizedCurrentUrl) {
         pages[normalizedCurrentUrl] = -1;
-        return pages;
+        return;//pages;
     }
     if (pages[normalizedCurrentUrl] > 0) {
         pages[normalizedCurrentUrl]++;
-        return pages;
+        return;// pages;
     }
 
     pages[normalizedCurrentUrl] = 1;
@@ -68,19 +69,19 @@ async function crawlPageAbsolute(currentUrl, pages) {
         
         if (resp.status > 399) {
             console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
-            return pages;
+            return;// pages;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
             console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
-            return pages;
+            return;// pages;
         }
     } catch(err) {
         console.log(`Error fetching from: `, currentUrl, err.message);
     }
 
-    return pages;
+    return;// pages;
 }
 
 function getURLsFromHTML(htmlBody, baseURL) {
@@ -108,12 +109,11 @@ function getURLsFromHTML(htmlBody, baseURL) {
 }
 
 function normalizeURL(urlString) {
-    const blacklist = ["www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
-        "web.appstorm.net", "github.com"];
+    const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
+        "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net"];
     
     const urlObj = new URL(urlString);
     if (blacklist.indexOf(urlObj.hostname) > -1) {
-        console.log("--------------------------------" + urlObj.hostname)
         return "";
     }
 

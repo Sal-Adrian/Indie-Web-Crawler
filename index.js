@@ -16,15 +16,18 @@ async function main() {
     let baseUrl = process.argv[2];
 
     console.log("Starting crawl of ", baseUrl);
-    let pages = await crawlPage(baseUrl, baseUrl, {});
+    let pages = {};
+    let visited = await crawlPage(baseUrl, pages, []);
 
     for (; depth > 0; depth--) {
+        console.log("==================================");
         console.log("Starting crawl of ", baseUrl);
         pages = await crawlPage(baseUrl, baseUrl, {});
         // printReport(pages);
     }
 
     printReport(pages);
+    console.log(visited);
 }
 
 main();
