@@ -1,4 +1,5 @@
 const {crawlPage} = require('./crawl');
+const {hasVisitedNew} = require('./crawl');
 const {printReport} = require('./report');
 
 async function main() {
@@ -11,23 +12,38 @@ async function main() {
         process.exit(1);
     }
     // Default depth level set to 1
-    let depth = process.argv.length > 3 ? process.argv[3]-1 : 0;
-
+    let depth = process.argv.length > 3 ? process.argv[3]-1 : 1;
     let baseUrl = process.argv[2];
 
-    console.log("Starting crawl of ", baseUrl);
-    let pages = {};
-    let visited = await crawlPage(baseUrl, pages, []);
+    let thePage = await crawl(baseUrl, [], depth);
+    console.log("CRAWLER IS AT:", thePage);
+}
 
-    for (; depth > 0; depth--) {
-        console.log("==================================");
-        console.log("Starting crawl of ", baseUrl);
-        pages = await crawlPage(baseUrl, baseUrl, {});
-        // printReport(pages);
+async function crawl(baseUrl, visited, depth) {
+    if (depth < 1) {
+        return baseUrl;
     }
 
+    console.log("==================================");
+    console.log("Starting crawl of ", baseUrl);
+    let pages = {};
+    visited = await crawlPage(baseUrl, pages, visited);
+    let keys = Object.keys(pages);
+
+    console.log("==================================");
+    let newUrl = keys[ Math.floor(Math.random() * keys.length) ]
+    
+    for (let i = 0; hasVisitedNew(visited, newUrl); i++) {
+        if (i == 50) {
+            return baseUrl;
+        }
+        newUrl = keys[ Math.floor(Math.random() * keys.length) ]
+    }
+    
     printReport(pages);
-    console.log(visited);
+
+    thePage = await crawl(newUrl, visited, --depth);
+    return thePage;
 }
 
 main();

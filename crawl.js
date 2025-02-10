@@ -124,8 +124,18 @@ function normalizeURL(urlString) {
     return hostPath;
 }
 
+function hasVisitedNew (visited, newUrl) {
+    try {
+    const newUrlObj = new URL(newUrl);
+    return (visited.indexOf(newUrlObj.hostname) > -1);
+    } catch (err) {
+        return (visited.indexOf(newUrl) > -1);
+    }
+}
+
 module.exports = {
     normalizeURL,
     getURLsFromHTML,
-    crawlPage
+    crawlPage,
+    hasVisitedNew
 }
