@@ -30,20 +30,21 @@ async function crawl(baseUrl, visited, depth) {
     let keys = Object.keys(pages);
 
     console.log("==================================");
-    let newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ]
-    let newUrlObj = new URL(newUrl);
-        
-    for (let i = 0; visited.indexOf(newUrlObj.hostname) > -1; i++) {
-        if (i == 50) {
-            return baseUrl;
-        }
+    let newUrl, newUrlObj;
+    let i = 0
+    do {
         newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ];
-        newUrlObj = new URL(newUrl);
-    }
+        i++;
+        if (i > 50) return baseUrl;
+        try {
+            newUrlObj = new URL(newUrl);
+        } catch (err) {
+            continue;
+        }
+    } while (visited.indexOf(newUrlObj.hostname) > -1);
     
     printReport(pages);
 
-    console.log(newUrl)
     thePage = await crawl(newUrl, visited, --depth);
     return thePage;
 }
