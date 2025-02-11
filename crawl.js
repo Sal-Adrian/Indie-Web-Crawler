@@ -1,5 +1,9 @@
 const {JSDOM} = require('jsdom');
 
+const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
+    "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net", "www.mozilla.org", 
+    "www.facebook.com", "twitter.com", "www.deviantart.com", "www.microsoft.com", "www.pintrest.com"];
+
 async function crawlPage(currentUrl, pages, visited) {
     const currUrlObj = new URL(currentUrl);
     if (visited.indexOf(currUrlObj.hostname) < 0) {
@@ -105,9 +109,6 @@ function getURLsFromHTML(htmlBody, baseURL) {
 }
 
 function normalizeURL(urlString) {
-    const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
-        "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net"];
-    
     const urlObj = new URL(urlString);
     if (blacklist.indexOf(urlObj.hostname) > -1) {
         return "";
