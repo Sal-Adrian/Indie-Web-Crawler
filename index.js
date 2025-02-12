@@ -36,17 +36,18 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
 
     if (seeReport != "n") console.log("==================================");
     let newUrl, newUrlObj;
-    let i = 0
-    do {
+    for (let i = 0; i < 50; i++) {
         newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ];
-        i++;
         if (i > 50) return baseUrl;
         try {
             newUrlObj = new URL(newUrl);
         } catch (err) {
             continue;
         }
-    } while (visited.indexOf(newUrlObj.hostname) > -1);
+
+        if (visited.indexOf(newUrlObj.hostname) < 0)
+            break;
+    }
     
     if (seeReport != "n") printReport(pages);
 
