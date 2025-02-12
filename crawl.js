@@ -1,8 +1,9 @@
 const {JSDOM} = require('jsdom');
 
 const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
-    "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net", "www.mozilla.org", 
-    "www.facebook.com", "twitter.com", "www.deviantart.com", "www.microsoft.com", "www.pintrest.com"];
+    "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net", "www.mozilla.org", "x.com", 
+    "www.facebook.com", "twitter.com", "www.deviantart.com", "www.microsoft.com", "www.pinterest.com",
+    "itch.io", "www.instagram.com"];
 
 async function crawlPage(currentUrl, pages, visited, seeDebug) {
     const currUrlObj = new URL(currentUrl);
