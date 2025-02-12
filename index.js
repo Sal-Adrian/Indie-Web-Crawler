@@ -22,9 +22,9 @@ async function main() {
 }
 
 async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
-    if (depth < 1) {
-        return baseUrl;
-    }
+    if (depth > 1) console.log(depth, " more pages to go!");
+    else if (depth < 1) return baseUrl;
+    else console.log("1 more page to go!");
 
     if (seeReport) {
         console.log("==================================");
