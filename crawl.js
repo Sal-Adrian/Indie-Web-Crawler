@@ -17,19 +17,19 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
 
     pages[normalizedCurrentUrl] = -1;
 
-    if (seeDebug) console.log(`Actively crawling: ${currentUrl}`);
+    if (seeDebug != "n") console.log(`Actively crawling: ${currentUrl}`);
 
     try {
         const resp = await fetch(currentUrl);
-        
+
         if (resp.status > 399) {
-            if (seeDebug) console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
+            if (seeDebug != "n") console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
             return visited;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
-            if (seeDebug) console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
+            if (seeDebug != "n") console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
             return visited;
         }
 
@@ -45,7 +45,7 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
             }
         }
     } catch(err) {
-        if (seeDebug) console.log(`Error fetching from: `, currentUrl, err.message);
+        if (seeDebug != "n") console.log(`Error fetching from: `, currentUrl, err.message);
     }
 
     return visited;
@@ -64,23 +64,23 @@ async function crawlPageAbsolute(currentUrl, pages, seeDebug) {
 
     pages[normalizedCurrentUrl] = 1;
 
-    if (seeDebug) console.log(`Actively crawlinig: ${currentUrl}`);
+    if (seeDebug != "n") console.log(`Actively crawlinig: ${currentUrl}`);
 
     try {
         const resp = await fetch(currentUrl);
         
         if (resp.status > 399) {
-            if (seeDebug) console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
+            if (seeDebug != "n") console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
             return;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
-            if (seeDebug) console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
+            if (seeDebug != "n") console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
             return;
         }
     } catch(err) {
-        if (seeDebug) console.log(`Error fetching from: `, currentUrl, err.message);
+        if (seeDebug != "n") console.log(`Error fetching from: `, currentUrl, err.message);
     }
 }
 

@@ -11,10 +11,10 @@ async function main() {
         process.exit(1);
     }
     // Default depth level set to 1
-    let depth = process.argv.length > 3 ? process.argv[3] : 1;
+    const depth = process.argv.length > 3 ? process.argv[3] : 1;
     // Default hides report and debug messages
-    let seeReport = process.argv.length > 4 ? process.argv[4] : false;
-    let seeDebug = process.argv.length > 5 ? process.argv[5] : false;
+    const seeReport = process.argv.length > 4 ? process.argv[4] : "n";
+    const seeDebug = process.argv.length > 5 ? process.argv[5] : "n";
     let baseUrl = process.argv[2];
 
     let thePage = await crawl(baseUrl, [], depth, seeReport, seeDebug);
@@ -26,7 +26,7 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
     else if (depth < 1) return baseUrl;
     else console.log("1 more page to go!");
 
-    if (seeReport) {
+    if (seeReport != "n") {
         console.log("==================================");
         console.log("Starting crawl of ", baseUrl);
     }
@@ -34,7 +34,7 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
     visited = await crawlPage(baseUrl, pages, visited, seeDebug);
     let keys = Object.keys(pages);
 
-    if (seeReport) console.log("==================================");
+    if (seeReport != "n") console.log("==================================");
     let newUrl, newUrlObj;
     let i = 0
     do {
@@ -48,7 +48,7 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
         }
     } while (visited.indexOf(newUrlObj.hostname) > -1);
     
-    if (seeReport) printReport(pages);
+    if (seeReport != "n") printReport(pages);
 
     thePage = await crawl(newUrl, visited, --depth, seeReport, seeDebug);
     return thePage;
