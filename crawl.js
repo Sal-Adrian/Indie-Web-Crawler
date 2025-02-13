@@ -1,4 +1,7 @@
+const jsdom = require('jsdom');
 const {JSDOM} = require('jsdom');
+const virtualConsole = new jsdom.VirtualConsole();
+virtualConsole.on("error", () => {});   // Hides jsdom error when CSS stylesheet is in HTML
 
 const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
     "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net", "www.mozilla.org", "x.com", 
@@ -87,7 +90,7 @@ async function crawlPageAbsolute(currentUrl, pages, seeDebug) {
 
 function getURLsFromHTML(htmlBody, baseURL, seeDebug) {
     const urls = [];
-    const dom = new JSDOM(htmlBody);
+    const dom = new JSDOM(htmlBody, { virtualConsole });
     const linkElements = dom.window.document.querySelectorAll('a');
     for (linkElement of linkElements) {
         if (linkElement.href.slice(0, 1) === '/') {
