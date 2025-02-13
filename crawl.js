@@ -36,7 +36,7 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
 
         const htmlBody = await resp.text();
 
-        const nextUrls = getURLsFromHTML(htmlBody, currentUrl);
+        const nextUrls = getURLsFromHTML(htmlBody, currentUrl, seeDebug);
 
         for (const nextUrl of nextUrls) {
             let nextUrlObj = new URL(nextUrl);
@@ -85,7 +85,7 @@ async function crawlPageAbsolute(currentUrl, pages, seeDebug) {
     }
 }
 
-function getURLsFromHTML(htmlBody, baseURL) {
+function getURLsFromHTML(htmlBody, baseURL, seeDebug) {
     const urls = [];
     const dom = new JSDOM(htmlBody);
     const linkElements = dom.window.document.querySelectorAll('a');
@@ -95,14 +95,14 @@ function getURLsFromHTML(htmlBody, baseURL) {
                 const urlObj = new URL(`${baseURL}${linkElement.href}`);
                 urls.push(urlObj.href);
             } catch(err) {
-                if (seeDebug) console.log("error with relative URL:", err.message);
+                if (seeDebug != "n") console.log("error with relative URL:", err.message);
             }
         } else {
             try {
                 const urlObj = new URL(linkElement.href);
                 urls.push(urlObj.href);
             } catch(err) {
-                if (seeDebug) console.log("error with absolute URL:", err.message);
+                if (seeDebug != "n") console.log("error with absolute URL:", err.message);
             }
         }
     }
