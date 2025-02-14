@@ -35,10 +35,10 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
     let keys = Object.keys(pages);
 
     if (seeReport != "n") console.log("==================================");
-    let newUrl, newUrlObj;
-    for (let i = 0; i < 50; i++) {
+    let newUrl, newUrlObj, i = 0;
+    while (i < 50) {
+        i++;
         newUrl = "https://" + keys[ Math.floor(Math.random() * keys.length) ];
-        if (i > 50) return baseUrl;
         try {
             newUrlObj = new URL(newUrl);
         } catch (err) {
@@ -48,6 +48,7 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
         if (visited.indexOf(newUrlObj.hostname) < 0)
             break;
     }
+    if (i > 49) return baseUrl;
     
     if (seeReport != "n") printReport(pages);
 
