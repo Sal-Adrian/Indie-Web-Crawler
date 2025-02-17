@@ -117,7 +117,10 @@ function getURLsFromHTML(htmlBody, baseURL, seeDebug) {
 
 function normalizeURL(urlString) {
     const urlObj = new URL(urlString);
-    if (blacklist.indexOf(urlObj.hostname) > -1) {
+    const hName = urlObj.hostname;
+    if (blacklist.indexOf(hName) > -1 ||
+        hName.substring(0, 6) == "google" ||
+        hName.substring(hName.indexOf(".")+1, hName.indexOf(".")+7) == "google") {
         return "";
     }
 
