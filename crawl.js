@@ -18,14 +18,12 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
     }
 
     const normalizedCurrentUrl = normalizeURL(currentUrl);
-    if (pages[normalizedCurrentUrl] > 0 || pages[normalizedCurrentUrl] < 0) {
-        return visited;
-    }
 
     pages[normalizedCurrentUrl] = -1;
 
     if (seeDebug != "n") console.log(`Actively crawling: ${currentUrl}`);
 
+    let promises = [];
     try {
         const resp = await fetch(currentUrl);
 
@@ -48,46 +46,48 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
             let nextUrlObj = new URL(nextUrl);
             if (currUrlObj.hostname !== nextUrlObj.hostname &&
               visited.indexOf(nextUrlObj.hostname) < 0) {
-                crawlPageAbsolute(nextUrl, pages, seeDebug);
+                promises.push(crawlPageAbsolute(nextUrl, pages, seeDebug));
             }
         }
     } catch(err) {
         if (seeDebug != "n") console.log(`Error fetching from: `, currentUrl, err.message);
     }
-
+    await Promise.all(promises).then( function () {}, function (err) {});
     return visited;
 }
 
 async function crawlPageAbsolute(currentUrl, pages, seeDebug) {
     const normalizedCurrentUrl = normalizeURL(currentUrl);
-    if (!normalizedCurrentUrl) {
+    if (typeof pages[normalizedCurrentUrl] !== 'undefined') {
+        if (pages[normalizedCurrentUrl] > 0) pages[normalizedCurrentUrl]++;
+        return;
+    }
+    if (!normalizedCurrentUrl) { 
         pages[normalizedCurrentUrl] = -1;
         return;
     }
-    if (pages[normalizedCurrentUrl] > 0) {
-        pages[normalizedCurrentUrl]++;
-        return;
-    }
-
     pages[normalizedCurrentUrl] = 1;
 
-    if (seeDebug != "n") console.log(`Actively crawlinig: ${currentUrl}`);
+    if (seeDebug != "n") console.log(`Actively crawling: ${currentUrl}`);
 
     try {
         const resp = await fetch(currentUrl);
         
         if (resp.status > 399) {
             if (seeDebug != "n") console.log("Error in fetching with status code: ", resp.status, " on page: ", currentUrl);
+            pages[normalizedCurrentUrl] = -1;
             return;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
             if (seeDebug != "n") console.log("Non HTML response, content type: ", contentType, " on page: ", currentUrl);
+            pages[normalizedCurrentUrl] = -1;
             return;
         }
     } catch(err) {
         if (seeDebug != "n") console.log(`Error fetching from: `, currentUrl, err.message);
+        pages[normalizedCurrentUrl] = -1;
     }
 }
 

@@ -34,6 +34,10 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
     visited = await crawlPage(baseUrl, pages, visited, seeDebug);
     let keys = Object.keys(pages);
 
+    for (let key of keys) {
+        if(pages[key] < 0) delete pages[key];
+    }
+    
     if (seeReport != "n") console.log("==================================");
     let newUrl, newUrlObj, i = 0;
     while (i < 50) {
