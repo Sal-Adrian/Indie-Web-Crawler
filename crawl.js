@@ -6,7 +6,10 @@ virtualConsole.on("error", () => {});   // Hides jsdom error when CSS stylesheet
 const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vice.com", "arstechnica.com",
     "web.appstorm.net", "github.com", "bsky.app", "status.neocitiesops.net", "www.mozilla.org", "x.com", 
     "www.facebook.com", "twitter.com", "www.deviantart.com", "www.microsoft.com", "www.pinterest.com",
-    "itch.io", "www.instagram.com"];
+    "itch.io", "www.instagram.com", "en.wikipedia.org", "www.google.com", "www.linkedin.com", "www.namecheap.com",
+    "play.google.com", "itunes.apple.com", "statcounter.com", "web.archive.org", "youtube.com", "www.youtube.com",
+    "discord.gg", "soundcloud.com", "www.patreon.com", "www.gofundme.com", "youtu.be", "tv.youtube.com",
+    "www.mabsland.com", "www.tumblr.com"];
 
 async function crawlPage(currentUrl, pages, visited, seeDebug) {
     const currUrlObj = new URL(currentUrl);
