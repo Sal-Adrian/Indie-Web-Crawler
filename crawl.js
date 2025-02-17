@@ -12,14 +12,17 @@ const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vic
     "www.mabsland.com", "www.tumblr.com"];
 
 async function crawlPage(currentUrl, pages, visited, seeDebug) {
+    if (Object.keys(pages).length > 100) return;
+
+    const normalizedCurrentUrl = normalizeURL(currentUrl);
+    if (typeof pages[normalizedCurrentUrl] !== 'undefined') return;
+
+    pages[normalizedCurrentUrl] = -1;
+
     const currUrlObj = new URL(currentUrl);
     if (visited.indexOf(currUrlObj.hostname) < 0) {
         visited.push(currUrlObj.hostname);
     }
-
-    const normalizedCurrentUrl = normalizeURL(currentUrl);
-
-    pages[normalizedCurrentUrl] = -1;
 
     if (seeDebug != "n") console.log(`Actively crawling: ${currentUrl}`);
 
@@ -44,8 +47,11 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
 
         for (const nextUrl of nextUrls) {
             let nextUrlObj = new URL(nextUrl);
-            if (currUrlObj.hostname !== nextUrlObj.hostname &&
-              visited.indexOf(nextUrlObj.hostname) < 0) {
+            if (currUrlObj.hostname === nextUrlObj.hostname &&
+                currUrlObj.hostname != "neocities.org") {
+                promises.push(crawlPage(nextUrl, pages, visited, seeDebug));
+            }
+            else if (visited.indexOf(nextUrlObj.hostname) < 0) {
                 promises.push(crawlPageAbsolute(nextUrl, pages, seeDebug));
             }
         }
@@ -68,7 +74,7 @@ async function crawlPageAbsolute(currentUrl, pages, seeDebug) {
     }
     pages[normalizedCurrentUrl] = 1;
 
-    if (seeDebug != "n") console.log(`Actively crawling: ${currentUrl}`);
+    if (seeDebug != "n") console.log(`Fetching: ${currentUrl}`);
 
     try {
         const resp = await fetch(currentUrl);
