@@ -103,9 +103,13 @@ function getURLsFromHTML(htmlBody, baseURL, seeDebug) {
     const dom = new JSDOM(htmlBody, { virtualConsole });
     const linkElements = dom.window.document.querySelectorAll('a');
     for (linkElement of linkElements) {
-        if (linkElement.href.slice(0, 1) === '/') {
+        if (linkElement.href.slice(0, 1) === '/' ||
+        linkElement.href.slice(-5) === ".html" ) {
             try {
-                const urlObj = new URL(`${baseURL}${linkElement.href}`);
+                let urlString = baseURL;
+                if (linkElement.href.slice(-5) === ".html") urlString += '/';
+                urlString += linkElement.href;
+                const urlObj = new URL(urlString);
                 urls.push(urlObj.href);
             } catch(err) {
                 if (seeDebug != "n") console.log("error with relative URL:", err.message);
