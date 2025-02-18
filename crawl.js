@@ -9,7 +9,8 @@ const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vic
     "itch.io", "www.instagram.com", "en.wikipedia.org", "www.google.com", "www.linkedin.com", "www.namecheap.com",
     "play.google.com", "itunes.apple.com", "statcounter.com", "web.archive.org", "youtube.com", "www.youtube.com",
     "discord.gg", "soundcloud.com", "www.patreon.com", "www.gofundme.com", "youtu.be", "tv.youtube.com",
-    "www.mabsland.com", "www.tumblr.com"];
+    "www.mabsland.com", "www.tumblr.com", "studio.code.org", "www.snapchat.com", "bit.ly", "www.reddit.com",
+    "reddit.com", "mozilla.org", "www.archive.org", "archive.org", "discord.com", "pinterest.com", "www.paypal.com"];
 
 async function crawlPage(currentUrl, pages, visited, seeDebug) {
     if (Object.keys(pages).length > 100) return;
