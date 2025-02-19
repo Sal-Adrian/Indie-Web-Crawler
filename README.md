@@ -1,12 +1,10 @@
 # Web Crawler
 
-## Work in progress...
+## About
 
-This a web crawler specifically designed for Neocities. The crawler will go to a random page by traversing the web of users, and the user will try to find that webpage.
+The Indie Web is comprised of personal websites linked together with "buttons". Like the Wikipedia Game, this web crawler will traverse through the connections between these personal websites. Can you find the path that the crawler took to get from one web page to another? Or you could just use this crawler to generate a random person's web page and check out the cool stuff they're working on. This crawler is specifically designed to start at Neocities' browse page, but entering a personal website could also work.
 
 ## How to use
-
-Traverse into this folder in the terminal and enter the following command:
 
 node index.js [URL] [depth] [seeReport] [seeDebug]
 
