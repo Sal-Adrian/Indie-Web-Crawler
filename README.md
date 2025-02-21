@@ -8,10 +8,10 @@ The Indie Web is comprised of personal websites linked together with "buttons". 
 
 node index.js [URL] [depth] [seeReport] [seeDebug]
 
-URL - The URL you want to start the crawler at. Required.
+URL (default: https://neocities.org/browse) - The URL you want to start the crawler at.
 
-depth (default: 1) - An integer that tells the crawler the farthest it can go. Optional.
+depth (default: 1) - An integer that tells the crawler the farthest it can go.
 
-seeReport (default: n) - Report displays the amount of times the hyperlinks were found in each page. "n" hides the report. Optional.
+seeReport (default: n) - Report displays the amount of times the hyperlinks were found in each page. "n" hides the report.
 
-seeDebug (default: n) - Debug messages displays what pages are being visited and whether there was an error. "n" hides the debug messages. Optional.
+seeDebug (default: n) - Debug messages displays what pages are being visited and whether there was an error. "n" hides the debug messages.

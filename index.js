@@ -2,20 +2,15 @@ const {crawlPage} = require('./crawl');
 const {printReport} = require('./report');
 
 async function main() {
-    if (process.argv.length < 3) {
-        console.log("No website provided");
-        process.exit(1);
-    }
     if (process.argv.length > 6) {
         console.log("Too many arguments!");
         process.exit(1);
     }
-    // Default depth level set to 1
+    
+    const baseUrl = process.argv.length > 2 ? process.argv[2] : "https://neocities.org/browse";
     const depth = process.argv.length > 3 ? process.argv[3] : 1;
-    // Default hides report and debug messages
     const seeReport = process.argv.length > 4 ? process.argv[4] : "n";
     const seeDebug = process.argv.length > 5 ? process.argv[5] : "n";
-    let baseUrl = process.argv[2];
 
     let thePage = await crawl(baseUrl, [], depth, seeReport, seeDebug);
     console.log("CRAWLER IS AT:", thePage);
