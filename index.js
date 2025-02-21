@@ -6,11 +6,13 @@ async function main() {
         console.log("Too many arguments!");
         process.exit(1);
     }
-    
-    const baseUrl = process.argv.length > 2 ? process.argv[2] : "https://neocities.org/browse";
+
+    let baseUrl = process.argv.length > 2 ? process.argv[2] : "https://neocities.org/browse";
     const depth = process.argv.length > 3 ? process.argv[3] : 1;
     const seeReport = process.argv.length > 4 ? process.argv[4] : "n";
     const seeDebug = process.argv.length > 5 ? process.argv[5] : "n";
+
+    if (baseUrl.substring(0, 8) != "https://") baseUrl = "https://" + baseUrl;
 
     let thePage = await crawl(baseUrl, [], depth, seeReport, seeDebug);
     console.log("CRAWLER IS AT:", thePage);
