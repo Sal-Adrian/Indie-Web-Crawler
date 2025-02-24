@@ -13,6 +13,7 @@ const blacklist = ["", "www.wired.com", "www.fastcodesign.com", "motherboard.vic
     "reddit.com", "mozilla.org", "www.archive.org", "archive.org", "discord.com", "pinterest.com", "www.paypal.com"];
 
 async function crawlPage(currentUrl, pages, visited, seeDebug) {
+    // Stops crawling if website is really big
     if (Object.keys(pages).length > 100) return;
 
     const normalizedCurrentUrl = normalizeURL(currentUrl);
@@ -21,9 +22,7 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
     pages[normalizedCurrentUrl] = -1;
 
     const currUrlObj = new URL(currentUrl);
-    if (visited.indexOf(currUrlObj.hostname) < 0) {
-        visited.push(currUrlObj.hostname);
-    }
+    if (visited.indexOf(currUrlObj.hostname) < 0) visited.push(currUrlObj.hostname);
 
     if (seeDebug != "n") console.log(`Actively crawling: ${currentUrl}`);
 
@@ -51,8 +50,7 @@ async function crawlPage(currentUrl, pages, visited, seeDebug) {
             if (currUrlObj.hostname === nextUrlObj.hostname &&
                 currUrlObj.hostname != "neocities.org") {
                 promises.push(crawlPage(nextUrl, pages, visited, seeDebug));
-            }
-            else if (visited.indexOf(nextUrlObj.hostname) < 0) {
+            } else if (visited.indexOf(nextUrlObj.hostname) < 0) {
                 promises.push(crawlPageAbsolute(nextUrl, pages, seeDebug));
             }
         }
@@ -131,14 +129,11 @@ function normalizeURL(urlString) {
     const hName = urlObj.hostname;
     if (blacklist.indexOf(hName) > -1 ||
         hName.substring(0, 6) == "google" ||
-        hName.substring(hName.indexOf(".")+1, hName.indexOf(".")+7) == "google") {
-        return "";
-    }
+        hName.substring(hName.indexOf(".")+1, hName.indexOf(".")+7) == "google") return "";
 
     const hostPath = `${urlObj.hostname}${urlObj.pathname}`;
-    if (hostPath.length > 0 && hostPath.slice(-1) === '/') {
-        return hostPath.slice(0, -1);
-    }
+    if (hostPath.length > 0 && hostPath.slice(-1) === '/') return hostPath.slice(0, -1);
+    
     return hostPath;
 }
 

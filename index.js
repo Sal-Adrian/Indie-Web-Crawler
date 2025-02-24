@@ -46,8 +46,7 @@ async function crawl(baseUrl, visited, depth, seeReport, seeDebug) {
             continue;
         }
 
-        if (visited.indexOf(newUrlObj.hostname) < 0)
-            break;
+        if (visited.indexOf(newUrlObj.hostname) < 0) break;
     }
     if (i > 49) return baseUrl;
     
