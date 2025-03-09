@@ -11,6 +11,11 @@ async function main() {
     const depth = process.argv.length > 3 ? process.argv[3] : 1;
     const seeReport = process.argv.length > 4 ? process.argv[4] : "n";
     const seeDebug = process.argv.length > 5 ? process.argv[5] : "n";
+    
+    if (isNaN(depth) || !Number.isInteger(parseFloat(depth))) {
+        console.log("Depth must be an Integer!");
+        process.exit(1);
+    }
 
     if (baseUrl.substring(0, 8) != "https://") baseUrl = "https://" + baseUrl;
 
